@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Página de Inicio</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #111; color: #fff; text-align: center; }
+    .bookmark { margin: 10px; display: inline-block; }
+    a { color: #0af; text-decoration: none; font-size: 18px; }
+    button { margin-left: 5px; }
+  </style>
+</head>
+<body>
+  <h1>⭐ Mis Marcadores</h1>
+  <div id="bookmarks"></div>
+  
+  <h2>Añadir marcador</h2>
+  <input id="name" placeholder="Nombre" />
+  <input id="url" placeholder="https://..." />
+  <button onclick="addBookmark()">Añadir</button>
+
+  <script>
+    // Cargar marcadores desde localStorage
+    function loadBookmarks() {
+      let bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+      let container = document.getElementById("bookmarks");
+      container.innerHTML = "";
+      bookmarks.forEach((bm, i) => {
+        container.innerHTML += `
+          <div class="bookmark">
+            <a href="${bm.url}" target="_blank">${bm.name}</a>
+            <button onclick="deleteBookmark(${i})">❌</button>
+          </div>
+        `;
+      });
+    }
+
+    // Añadir marcador
+    function addBookmark() {
+      let name = document.getElementById("name").value;
+      let url = document.getElementById("url").value;
+      if (!name || !url) return;
+      let bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+      bookmarks.push({ name, url });
+      localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+      loadBookmarks();
+    }
+
+    // Eliminar marcador
+    function deleteBookmark(i) {
+      let bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+      bookmarks.splice(i, 1);
+      localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+      loadBookmarks();
+    }
+
+    // Inicializar
+    loadBookmarks();
+  </script>
+</body>
+</html>
